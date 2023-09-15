@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.avaje.logback.abbreviator;
+package io.avaje.logback.encoder.abbreviator;
 
 import ch.qos.logback.classic.pattern.Abbreviator;
 import ch.qos.logback.classic.pattern.ClassNameOnlyAbbreviator;

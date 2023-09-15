@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.avaje.logback;
+package io.avaje.logback.encoder;
 
 import java.util.List;
 import java.util.regex.Pattern;

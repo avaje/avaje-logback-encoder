@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.avaje.logback;
+package io.avaje.logback.encoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import ch.qos.logback.core.boolex.EventEvaluator;
 import ch.qos.logback.core.joran.spi.DefaultClass;
 import ch.qos.logback.core.spi.LifeCycle;
 import ch.qos.logback.core.status.ErrorStatus;
-import io.avaje.logback.abbreviator.TrimPackageAbbreviator;
+import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
 
 /**
  * A {@link ThrowableHandlingConverter} (similar to logback's {@link ThrowableProxyConverter}) that

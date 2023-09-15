@@ -1,4 +1,4 @@
-package io.avaje.logback;
+package io.avaje.logback.encoder;
 
 public enum TimePattern {
   ISO_OFFSET_DATE_TIME,

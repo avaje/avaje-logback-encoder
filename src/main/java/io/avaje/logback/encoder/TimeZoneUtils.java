@@ -1,4 +1,4 @@
-package io.avaje.logback;
+package io.avaje.logback.encoder;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;

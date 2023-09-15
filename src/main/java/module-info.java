@@ -1,8 +1,8 @@
 
 module io.avaje.logback {
 
-  exports io.avaje.logback;
-  exports io.avaje.logback.abbreviator;
+  exports io.avaje.logback.encoder;
+  exports io.avaje.logback.encoder.abbreviator;
 
   requires transitive ch.qos.logback.classic;
   requires transitive ch.qos.logback.core;

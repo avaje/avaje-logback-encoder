@@ -1,4 +1,4 @@
-package io.avaje.logback;
+package io.avaje.logback.encoder;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
@@ -14,7 +14,7 @@ import io.avaje.jsonb.Jsonb;
 import io.avaje.jsonb.Types;
 import io.avaje.jsonb.spi.PropertyNames;
 import io.avaje.jsonb.stream.JsonStream;
-import io.avaje.logback.abbreviator.TrimPackageAbbreviator;
+import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
 
 public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
 

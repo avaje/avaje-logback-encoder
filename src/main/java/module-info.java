@@ -1,5 +1,5 @@
 
-module io.avaje.logback {
+module io.avaje.logback.encoder {
 
   exports io.avaje.logback.encoder;
   exports io.avaje.logback.encoder.abbreviator;

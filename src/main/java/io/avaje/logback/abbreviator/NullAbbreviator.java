@@ -18,6 +18,9 @@ package io.avaje.logback.abbreviator;
 import ch.qos.logback.classic.pattern.Abbreviator;
 
 public class NullAbbreviator implements Abbreviator {
+
+  private NullAbbreviator() {}
+
   public static final NullAbbreviator INSTANCE = new NullAbbreviator();
 
   @Override

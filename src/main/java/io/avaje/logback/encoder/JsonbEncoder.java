@@ -18,9 +18,6 @@ import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
 
 public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
 
-  /** Keyword used by {@link #setTimeZone(String)} to denote the system default time zone. */
-  private static final String DEFAULT_TIMEZONE_KEYWORD = "[DEFAULT]";
-
   private static final byte[] EMPTY_BYTES = {};
   private final JsonStream json;
   private final Map<String, String> customFieldsMap = new HashMap<>();
@@ -141,12 +138,7 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
   }
 
   public void setTimeZone(String timeZone) {
-    if (timeZone == null
-        || timeZone.isBlank()
-        || DEFAULT_TIMEZONE_KEYWORD.equalsIgnoreCase(timeZone)) {
-      this.timeZone = TimeZone.getDefault();
-    } else {
-      this.timeZone = TimeZoneUtils.parseTimeZone(timeZone);
-    }
+
+    this.timeZone = TimeZoneUtils.parseTimeZone(timeZone);
   }
 }

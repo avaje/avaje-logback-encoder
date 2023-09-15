@@ -5,6 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
 public class TimeZoneUtils {
+  /** Keyword used by {@link #setTimeZone(String)} to denote the system default time zone. */
+  private static final String DEFAULT_TIMEZONE_KEYWORD = "[DEFAULT]";
+
   private TimeZoneUtils() {}
 
   /**
@@ -20,6 +23,10 @@ public class TimeZoneUtils {
    *     representation.
    */
   public static TimeZone parseTimeZone(String str) {
+    if (str == null || str.isBlank() || DEFAULT_TIMEZONE_KEYWORD.equalsIgnoreCase(str)) {
+      return TimeZone.getDefault();
+    }
+
     TimeZone tz = TimeZone.getTimeZone(str);
 
     /*

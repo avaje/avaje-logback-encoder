@@ -1,28 +1,39 @@
-package io.avaje.logback;
+package io.avaje.logback.encoder;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.encoder.EncoderBase;
-import io.avaje.jsonb.JsonWriter;
+import io.avaje.jsonb.Jsonb;
+import io.avaje.jsonb.Types;
 import io.avaje.jsonb.spi.PropertyNames;
 import io.avaje.jsonb.stream.JsonStream;
-import io.avaje.logback.abbreviator.TrimPackageAbbreviator;
+import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
 
 public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
 
   private static final byte[] EMPTY_BYTES = {};
-  private final PropertyNames properties;
   private final JsonStream json;
+  private final Map<String, String> customFieldsMap = new HashMap<>();
+  private PropertyNames properties;
+  private DateTimeFormatter formatter;
 
   private final ThrowableHandlingConverter throwableConverter;
 
+  private TimeZone timeZone = TimeZone.getDefault();
+
+  private String timestampPattern;
+
+  private int fieldExtra;
+
   public JsonbEncoder() {
     this.json = JsonStream.builder().build();
-    this.properties =
-        json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
 
     final var converter = new ShortenedThrowableConverter();
     converter.setMaxDepthPerThrowable(3);
@@ -31,11 +42,18 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
     de.setTargetLength(20);
     converter.setClassNameAbbreviator(de);
     converter.setRootCauseFirst(true);
-    throwableConverter = converter; // new ExtendedThrowableProxyConverter(); // converter
+    throwableConverter = converter;
   }
 
   @Override
   public void start() {
+    this.properties =
+        json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
+    formatter = TimeZoneUtils.getFormatter(timestampPattern, timeZone.toZoneId());
+    fieldExtra =
+        customFieldsMap.entrySet().stream()
+            .mapToInt(e -> e.getKey().length() + e.getValue().length())
+            .sum();
     super.start();
     throwableConverter.start();
   }
@@ -65,14 +83,13 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
     final var message = event.getFormattedMessage();
     final var loggerName = event.getLoggerName();
     final int bufferSize =
-        100 + extra + message.length() + threadName.length() + loggerName.length();
+        100 + extra + fieldExtra + message.length() + threadName.length() + loggerName.length();
     final var outputStream = new ByteArrayOutputStream(bufferSize);
 
-    final Instant instant = Instant.ofEpochMilli(event.getTimeStamp());
-    try (JsonWriter writer = json.writer(outputStream)) {
+    try (var writer = json.writer(outputStream)) {
       writer.beginObject(properties);
       writer.name(0);
-      writer.rawValue(instant.toString());
+      writer.rawValue(formatter.format(Instant.ofEpochMilli(event.getTimeStamp())));
       writer.name(1);
       writer.rawValue(event.getLevel().toString());
       writer.name(2);
@@ -86,6 +103,11 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
         writer.name(5);
         writer.value(stackTraceBody);
       }
+      customFieldsMap.forEach(
+          (k, v) -> {
+            writer.name(k);
+            writer.value(v);
+          });
       event
           .getMDCPropertyMap()
           .forEach(
@@ -98,5 +120,25 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
     }
 
     return outputStream.toByteArray();
+  }
+
+  public void setCustomFields(String customFields) {
+    if (customFields == null || customFields.isBlank()) {
+      return;
+    }
+    var jsonb = Jsonb.builder().adapter(json).build();
+    jsonb
+        .<Map<String, Object>>type(Types.mapOf(Object.class))
+        .fromJson(customFields)
+        .forEach((k, v) -> customFieldsMap.put(k, jsonb.toJson(v)));
+  }
+
+  public void setTimestampPattern(String pattern) {
+    this.timestampPattern = pattern;
+  }
+
+  public void setTimeZone(String timeZone) {
+
+    this.timeZone = TimeZoneUtils.parseTimeZone(timeZone);
   }
 }

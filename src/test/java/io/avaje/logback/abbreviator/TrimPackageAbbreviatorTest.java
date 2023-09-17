@@ -17,6 +17,8 @@ package io.avaje.logback.abbreviator;
 
 import org.junit.jupiter.api.Test;
 
+import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

@@ -24,6 +24,8 @@ import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.boolex.EvaluationException;
 import ch.qos.logback.core.boolex.EventEvaluator;
 import ch.qos.logback.core.pattern.Converter;
+import io.avaje.logback.encoder.ShortenedThrowableConverter;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;

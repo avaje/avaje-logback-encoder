@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.avaje.logback.abbreviator;
+package io.avaje.logback.encoder.abbreviator;
 
 import ch.qos.logback.classic.pattern.Abbreviator;
 
 public class NullAbbreviator implements Abbreviator {
+
+  private NullAbbreviator() {}
+
   public static final NullAbbreviator INSTANCE = new NullAbbreviator();
 
   @Override

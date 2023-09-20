@@ -4,7 +4,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
-final class TimeZoneUtils {
+public final class TimeZoneUtils {
   /** Keyword used by {@link #setTimeZone(String)} to denote the system default time zone. */
   private static final String DEFAULT_TIMEZONE_KEYWORD = "[DEFAULT]";
 
@@ -22,7 +22,7 @@ final class TimeZoneUtils {
    * @throws IllegalArgumentException thrown when the string is not a valid TimeZone textual
    *     representation.
    */
-  static TimeZone parseTimeZone(String str) {
+  public static TimeZone parseTimeZone(String str) {
     if (str == null || str.isBlank() || DEFAULT_TIMEZONE_KEYWORD.equalsIgnoreCase(str)) {
       return TimeZone.getDefault();
     }
@@ -43,7 +43,7 @@ final class TimeZoneUtils {
     return tz;
   }
 
-  static DateTimeFormatter getFormatter(String pattern, ZoneId zoneId) {
+  public static DateTimeFormatter getFormatter(String pattern, ZoneId zoneId) {
     if (pattern == null) {
       return DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(zoneId);
     }

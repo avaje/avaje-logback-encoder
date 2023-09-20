@@ -49,7 +49,7 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
   @Override
   public void start() {
     properties = json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
-    formatter = TimeZoneUtils.getFormatter(timestampPattern, timeZone.toZoneId());
+    formatter = TimeZoneUtils.formatter(timestampPattern, timeZone.toZoneId());
     fieldExtra = customFieldsMap.entrySet().stream()
             .mapToInt(e -> e.getKey().length() + e.getValue().length())
             .sum();

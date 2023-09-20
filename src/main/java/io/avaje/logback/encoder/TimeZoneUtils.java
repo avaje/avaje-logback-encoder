@@ -43,7 +43,7 @@ public final class TimeZoneUtils {
     return tz;
   }
 
-  public static DateTimeFormatter getFormatter(String pattern, ZoneId zoneId) {
+  public static DateTimeFormatter formatter(String pattern, ZoneId zoneId) {
     if (pattern == null) {
       return DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(zoneId);
     }

@@ -28,6 +28,7 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
 
   private TimeZone timeZone = TimeZone.getDefault();
 
+  /** Null implies default of ISO_OFFSET_DATE_TIME */
   private String timestampPattern;
 
   private int fieldExtra;
@@ -47,11 +48,9 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
 
   @Override
   public void start() {
-    this.properties =
-        json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
+    properties = json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
     formatter = TimeZoneUtils.getFormatter(timestampPattern, timeZone.toZoneId());
-    fieldExtra =
-        customFieldsMap.entrySet().stream()
+    fieldExtra = customFieldsMap.entrySet().stream()
             .mapToInt(e -> e.getKey().length() + e.getValue().length())
             .sum();
     super.start();
@@ -82,8 +81,7 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
     final var threadName = event.getThreadName();
     final var message = event.getFormattedMessage();
     final var loggerName = event.getLoggerName();
-    final int bufferSize =
-        100 + extra + fieldExtra + message.length() + threadName.length() + loggerName.length();
+    final int bufferSize = 100 + extra + fieldExtra + message.length() + threadName.length() + loggerName.length();
     final var outputStream = new ByteArrayOutputStream(bufferSize);
 
     try (var writer = json.writer(outputStream)) {
@@ -103,18 +101,14 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
         writer.name(5);
         writer.value(stackTraceBody);
       }
-      customFieldsMap.forEach(
-          (k, v) -> {
-            writer.name(k);
-            writer.value(v);
-          });
-      event
-          .getMDCPropertyMap()
-          .forEach(
-              (k, v) -> {
-                writer.name(k);
-                writer.value(v);
-              });
+      customFieldsMap.forEach((k, v) -> {
+        writer.name(k);
+        writer.value(v);
+      });
+      event.getMDCPropertyMap().forEach((k, v) -> {
+        writer.name(k);
+        writer.value(v);
+      });
       writer.endObject();
       writer.writeNewLine();
     }
@@ -138,7 +132,6 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
   }
 
   public void setTimeZone(String timeZone) {
-
     this.timeZone = TimeZoneUtils.parseTimeZone(timeZone);
   }
 }

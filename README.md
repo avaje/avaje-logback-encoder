@@ -17,6 +17,17 @@ Add the encoder to your appender
 </appender>
 ```
 
+## Module use
+
+To ensure `Jlink` correctly determines the runtime modules add the following to your `module-info.java`:
+
+
+```java
+module my.module {
+  requires io.avaje.logback.encoder;  
+}
+```
+
 ## Global Custom Fields
 
 Add custom fields that will appear in every LoggingEvent like this :

@@ -11,7 +11,7 @@
 
   <groupId>io.avaje</groupId>
   <artifactId>avaje-logback-encoder</artifactId>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.3</version>
 
   <dependencies>
     <dependency>

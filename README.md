@@ -18,7 +18,7 @@ Add the encoder to your appender
 ```
 
 ### JPMS Use
-To ensure `Jlink` correctly determines the runtime modules add the following to your `module-info.java`:
+To ensure `jlink` correctly determines the runtime modules required, add the following to your `module-info.java`:
 
 ```java
 module my.module {

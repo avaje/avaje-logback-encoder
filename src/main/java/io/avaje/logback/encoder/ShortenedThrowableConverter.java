@@ -61,7 +61,7 @@ import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
  * <ul>
  *   <li>"rootFirst" - indicating that stacks should be printed root-cause first
  *   <li>"inlineHash" - indicating that hexadecimal error hashes should be computed and inlined
- *   <li>"inline" - indicating that the whole stack trace should be inlined, using "\\n" as
+ *   <li>"inline" - indicating that the whole stack trace should be inlined, using "\n" as
  *       separator
  *   <li>"omitCommonFrames" - omit common frames
  *   <li>"keepCommonFrames" - keep common frames
@@ -101,7 +101,7 @@ public final class ShortenedThrowableConverter extends ThrowableHandlingConverte
    * String sequence to use to delimit lines instead of {@link CoreConstants#LINE_SEPARATOR} when
    * inline is active
    */
-  public static final String DEFAULT_INLINE_SEPARATOR = "\\n";
+  public static final String DEFAULT_INLINE_SEPARATOR = "\n";
 
   private final AtomicInteger errorCount = new AtomicInteger();
 
@@ -209,7 +209,7 @@ public final class ShortenedThrowableConverter extends ThrowableHandlingConverte
           /*
            * Remaining options are either
            *     - "rootFirst" - indicating that stacks should be printed root-cause first
-           *     - "inline" - indicating that the whole stack trace should be inlined, using "\\n" as separator
+           *     - "inline" - indicating that the whole stack trace should be inlined, using "\n" as separator
            *     - "omitCommonFrames" - omit common frames
            *     - "keepCommonFrames" - keep common frames
            *     - evaluator name - name of evaluators that will determine if the stacktrace is ignored

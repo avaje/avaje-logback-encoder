@@ -20,20 +20,18 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
   private static final byte[] EMPTY_BYTES = {};
   private final JsonStream json;
   private final Map<String, String> customFieldsMap = new HashMap<>();
-  private PropertyNames properties;
-  private DateTimeFormatter formatter;
-
+  private final PropertyNames properties;
   private final ThrowableHandlingConverter throwableConverter;
 
+  private DateTimeFormatter formatter;
   private TimeZone timeZone = TimeZone.getDefault();
-
   /** Null implies default of ISO_OFFSET_DATE_TIME */
   private String timestampPattern;
-
   private int fieldExtra;
 
   public JsonbEncoder() {
     this.json = JsonStream.builder().build();
+    this.properties =json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
 
     final var converter = new ShortenedThrowableConverter();
     converter.setMaxDepthPerThrowable(3);
@@ -42,13 +40,11 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
     de.setTargetLength(20);
     converter.setClassNameAbbreviator(de);
     converter.setRootCauseFirst(true);
-    throwableConverter = converter;
+    this.throwableConverter = converter;
   }
 
   @Override
   public void start() {
-    properties =
-        json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
     formatter = TimeZoneUtils.formatter(timestampPattern, timeZone.toZoneId());
     fieldExtra =
         customFieldsMap.entrySet().stream()
@@ -82,8 +78,7 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
     final var threadName = event.getThreadName();
     final var message = event.getFormattedMessage();
     final var loggerName = event.getLoggerName();
-    final int bufferSize =
-        100 + extra + fieldExtra + message.length() + threadName.length() + loggerName.length();
+    final int bufferSize = 100 + extra + fieldExtra + message.length() + threadName.length() + loggerName.length();
     final var outputStream = new ByteArrayOutputStream(bufferSize);
 
     try (var writer = json.writer(outputStream)) {
@@ -98,23 +93,18 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
       writer.value(message);
       writer.name(4);
       writer.value(threadName);
-
       if (!stackTraceBody.isEmpty()) {
         writer.name(5);
         writer.value(stackTraceBody);
       }
-      customFieldsMap.forEach(
-          (k, v) -> {
-            writer.name(k);
-            writer.value(v);
-          });
-      event
-          .getMDCPropertyMap()
-          .forEach(
-              (k, v) -> {
-                writer.name(k);
-                writer.value(v);
-              });
+      customFieldsMap.forEach((k, v) -> {
+        writer.name(k);
+        writer.value(v);
+      });
+      event.getMDCPropertyMap().forEach((k, v) -> {
+        writer.name(k);
+        writer.value(v);
+      });
       writer.endObject();
       writer.writeNewLine();
     }

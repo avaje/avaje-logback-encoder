@@ -9,9 +9,11 @@ logback encoder that uses avaje-jsonb to log events as json
 ## Usage
 
 Add the encoder to your appender
+
 ```xml
+
 <appender name="app" class="your.appender.class">
-    <encoder class="io.avaje.logback.encoder.JsonbEncoder">
+    <encoder class="io.avaje.logback.encoder.JsonEncoder">
         <-- configuration -->
     </encoder>
 </appender>
@@ -31,8 +33,11 @@ module my.module {
 Add custom fields that will appear in every LoggingEvent like this :
 
 ```xml
-<encoder class="io.avaje.logback.encoder.JsonbEncoder">
-    <customFields>{"appname":"myWebservice","roles":["customerorder","auth"],"buildinfo":{"version":"Version 0.1.0-SNAPSHOT","lastcommit":"75473700d5befa953c45f630c6d9105413c16fe1"}}</customFields>
+
+<encoder class="io.avaje.logback.encoder.JsonEncoder">
+    <customFields>{"appname":"myWebservice","roles":["customerorder","auth"],"buildinfo":{"version":"Version
+        0.1.0-SNAPSHOT","lastcommit":"75473700d5befa953c45f630c6d9105413c16fe1"}}
+    </customFields>
 </encoder>
 ```
 
@@ -45,7 +50,8 @@ By default, timestamps are written as string values in the format specified by
 You can change the pattern like this:
 
 ```xml
-<encoder class="io.avaje.logback.encoder.JsonbEncoder">
+
+<encoder class="io.avaje.logback.encoder.JsonEncoder">
     <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS</timestampPattern>
 </encoder>
 ```
@@ -58,7 +64,8 @@ The value of the `timestampPattern` can be any of the following:
 The formatter uses the default TimeZone of the host Java platform by default. You can change it like this:
 
 ```xml
-<encoder class="io.avaje.logback.encoder.JsonbEncoder">
+
+<encoder class="io.avaje.logback.encoder.JsonEncoder">
     <timeZone>UTC</timeZone>
 </encoder>
 ```

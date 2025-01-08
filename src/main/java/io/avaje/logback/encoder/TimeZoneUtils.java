@@ -23,7 +23,7 @@ public final class TimeZoneUtils {
    *     representation.
    */
   public static TimeZone parseTimeZone(String str) {
-    if (str == null || str.isBlank() || DEFAULT_TIMEZONE_KEYWORD.equalsIgnoreCase(str)) {
+    if (str == null || str.isEmpty() || DEFAULT_TIMEZONE_KEYWORD.equalsIgnoreCase(str)) {
       return TimeZone.getDefault();
     }
 
@@ -49,7 +49,7 @@ public final class TimeZoneUtils {
     }
 
     try {
-      var time = TimePattern.valueOf(pattern.toUpperCase());
+      TimePattern time = TimePattern.valueOf(pattern.toUpperCase());
       DateTimeFormatter format = null;
       switch (time) {
         case ISO_OFFSET_DATE_TIME:

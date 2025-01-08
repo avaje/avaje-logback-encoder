@@ -3,6 +3,21 @@
 [![Maven Central : avaje-record-builder](https://maven-badges.herokuapp.com/maven-central/io.avaje/avaje-logback-encoder/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.avaje/avaje-logback-encoder)
 [![Discord](https://img.shields.io/discord/1074074312421683250?color=%237289da&label=discord)](https://discord.gg/Qcqf9R27BR)
 
+# Backported to Java 8 and Logback 1.1
+
+This version of avaje-logback-encoder is backported to Java 8 and also to the 
+Logback version 1.1 Encoder API and tested against logback-classic version 1.1.11.
+
+It lives on the git `java8-backport` branch.
+
+```xml
+<dependency>
+  <groupId>io.avaje</groupId>
+  <artifactId>avaje-logback-encoder</artifactId>
+  <version>0.7-java8</version>
+</dependency>
+```
+
 # avaje-logback-encoder
 logback encoder that uses avaje-jsonb to log events as json
 
@@ -19,15 +34,6 @@ Add the encoder to your appender
 </appender>
 ```
 
-### JPMS Use
-To ensure `jlink` correctly determines the runtime modules required, add the following to your `module-info.java`:
-
-```java
-module my.module {
-  requires io.avaje.logback.encoder;  
-}
-```
-
 ## Global Custom Fields
 
 Add custom fields that will appear in every LoggingEvent like this :
@@ -35,9 +41,7 @@ Add custom fields that will appear in every LoggingEvent like this :
 ```xml
 
 <encoder class="io.avaje.logback.encoder.JsonEncoder">
-    <customFields>{"appname":"myWebservice","roles":["customerorder","auth"],"buildinfo":{"version":"Version
-        0.1.0-SNAPSHOT","lastcommit":"75473700d5befa953c45f630c6d9105413c16fe1"}}
-    </customFields>
+    <customFields>{"appname":"myWebservice","env":"dev"}</customFields>
 </encoder>
 ```
 

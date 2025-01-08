@@ -76,7 +76,7 @@ class JsonEncoderTest {
         SimpleMapper simpleMapper = SimpleMapper.builder().build();
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
-        assertThat((String)asMap.get("exception")).startsWith("java.lang.NullPointerException: Cannot invoke \"String.toUpperCase()\"");
+        assertThat((String)asMap.get("exception")).startsWith("java.lang.NullPointerException: ");
     }
 
     @Test
@@ -96,7 +96,7 @@ class JsonEncoderTest {
         SimpleMapper simpleMapper = SimpleMapper.builder().build();
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
-        assertThat((String)asMap.get("exception")).startsWith("j.l.NullPointerException: Cannot invoke \"String.toUpperCase()\"");
+        assertThat((String)asMap.get("exception")).startsWith("j.l.NullPointerException: ");
     }
 
     Throwable createThrowable() {

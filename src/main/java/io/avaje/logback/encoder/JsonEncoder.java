@@ -15,7 +15,7 @@ import io.avaje.json.simple.SimpleMapper;
 import io.avaje.json.stream.JsonStream;
 import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
 
-public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
+public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
 
   private static final byte[] EMPTY_BYTES = {};
   private final JsonStream json;
@@ -29,7 +29,7 @@ public final class JsonbEncoder extends EncoderBase<ILoggingEvent> {
   private String timestampPattern;
   private int fieldExtra;
 
-  public JsonbEncoder() {
+  public JsonEncoder() {
     this.json = JsonStream.builder().build();
     this.properties =json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
 

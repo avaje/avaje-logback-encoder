@@ -13,7 +13,6 @@ import ch.qos.logback.core.encoder.EncoderBase;
 import io.avaje.json.PropertyNames;
 import io.avaje.json.simple.SimpleMapper;
 import io.avaje.json.stream.JsonStream;
-import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
 
 public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
 
@@ -21,26 +20,19 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
   private final JsonStream json;
   private final Map<String, String> customFieldsMap = new HashMap<>();
   private final PropertyNames properties;
-  private final ThrowableHandlingConverter throwableConverter;
+  private ThrowableHandlingConverter throwableConverter = new ShortenedThrowableConverter();
 
   private DateTimeFormatter formatter;
   private TimeZone timeZone = TimeZone.getDefault();
   /** Null implies default of ISO_OFFSET_DATE_TIME */
   private String timestampPattern;
   private int fieldExtra;
+  private String component;
+  private String environment;
 
   public JsonEncoder() {
     this.json = JsonStream.builder().build();
-    this.properties =json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
-
-    final var converter = new ShortenedThrowableConverter();
-    converter.setMaxDepthPerThrowable(3);
-
-    final var de = new TrimPackageAbbreviator();
-    de.setTargetLength(20);
-    converter.setClassNameAbbreviator(de);
-    converter.setRootCauseFirst(true);
-    this.throwableConverter = converter;
+    this.properties = json.properties("component", "env", "timestamp", "level", "logger", "message", "thread", "exception");
   }
 
   @Override
@@ -83,18 +75,26 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
 
     try (var writer = json.writer(outputStream)) {
       writer.beginObject(properties);
-      writer.name(0);
-      writer.value(formatter.format(Instant.ofEpochMilli(event.getTimeStamp())));
-      writer.name(1);
-      writer.value(event.getLevel().toString());
+      if (component != null) {
+        writer.name(0);
+        writer.value(component);
+      }
+      if (environment != null) {
+        writer.name(1);
+        writer.value(environment);
+      }
       writer.name(2);
-      writer.value(loggerName);
+      writer.value(formatter.format(Instant.ofEpochMilli(event.getTimeStamp())));
       writer.name(3);
-      writer.value(message);
+      writer.value(event.getLevel().toString());
       writer.name(4);
+      writer.value(loggerName);
+      writer.name(5);
+      writer.value(message);
+      writer.name(6);
       writer.value(threadName);
       if (!stackTraceBody.isEmpty()) {
-        writer.name(5);
+        writer.name(7);
         writer.value(stackTraceBody);
       }
       customFieldsMap.forEach((k, v) -> {
@@ -108,8 +108,19 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
       writer.endObject();
       writer.writeNewLine();
     }
-
     return outputStream.toByteArray();
+  }
+
+  public void setComponent(String component) {
+    this.component = component;
+  }
+
+  public void setEnvironment(String environment) {
+    this.environment = environment;
+  }
+
+  public void setThrowableConverter(ThrowableHandlingConverter throwableConverter) {
+    this.throwableConverter = throwableConverter;
   }
 
   public void setCustomFields(String customFields) {

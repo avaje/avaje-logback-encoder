@@ -13,6 +13,11 @@
   <artifactId>avaje-logback-encoder</artifactId>
   <version>0.6-SNAPSHOT</version>
 
+  <properties>
+    <surefire.useModulePath>false</surefire.useModulePath>
+    <project.build.outputTimestamp>2024-12-16T11:14:14Z</project.build.outputTimestamp>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>ch.qos.logback</groupId>

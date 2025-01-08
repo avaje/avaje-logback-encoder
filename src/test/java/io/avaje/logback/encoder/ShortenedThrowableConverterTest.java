@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.avaje.logback;
+package io.avaje.logback.encoder;
 
 import ch.qos.logback.classic.pattern.Abbreviator;
 import ch.qos.logback.classic.spi.ClassPackagingData;
@@ -24,7 +24,6 @@ import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.boolex.EvaluationException;
 import ch.qos.logback.core.boolex.EventEvaluator;
 import ch.qos.logback.core.pattern.Converter;
-import io.avaje.logback.encoder.ShortenedThrowableConverter;
 
 import org.junit.jupiter.api.Test;
 

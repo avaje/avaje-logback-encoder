@@ -37,7 +37,7 @@ public abstract class StackElementFilter {
    *
    * @return the filter
    */
-  public static final StackElementFilter any() {
+  public static StackElementFilter any() {
     return new StackElementFilter() {
       @Override
       public boolean accept(StackTraceElement element) {
@@ -53,7 +53,7 @@ public abstract class StackElementFilter {
    *
    * @return the filter
    */
-  public static final StackElementFilter withSourceInfo() {
+  public static StackElementFilter withSourceInfo() {
     return new StackElementFilter() {
       @Override
       public boolean accept(StackTraceElement element) {
@@ -68,7 +68,7 @@ public abstract class StackElementFilter {
    * @param excludes regular expressions matching {@link StackTraceElement} to filter out
    * @return the filter
    */
-  public static final StackElementFilter byPattern(final List<Pattern> excludes) {
+  public static StackElementFilter byPattern(final List<Pattern> excludes) {
     return new StackElementFilter() {
       @Override
       public boolean accept(StackTraceElement element) {

@@ -84,9 +84,9 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
     try (var writer = json.writer(outputStream)) {
       writer.beginObject(properties);
       writer.name(0);
-      writer.rawValue(formatter.format(Instant.ofEpochMilli(event.getTimeStamp())));
+      writer.value(formatter.format(Instant.ofEpochMilli(event.getTimeStamp())));
       writer.name(1);
-      writer.rawValue(event.getLevel().toString());
+      writer.value(event.getLevel().toString());
       writer.name(2);
       writer.value(loggerName);
       writer.name(3);
@@ -99,7 +99,7 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
       }
       customFieldsMap.forEach((k, v) -> {
         writer.name(k);
-        writer.value(v);
+        writer.rawValue(v);
       });
       event.getMDCPropertyMap().forEach((k, v) -> {
         writer.name(k);

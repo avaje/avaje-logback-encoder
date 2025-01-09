@@ -32,7 +32,7 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
 
   public JsonEncoder() {
     this.json = JsonStream.builder().build();
-    this.properties = json.properties("component", "env", "timestamp", "level", "logger", "message", "thread", "exception");
+    this.properties = json.properties("component", "env", "timestamp", "level", "logger", "message", "thread", "stacktrace");
   }
 
   @Override

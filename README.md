@@ -24,7 +24,7 @@ To ensure `jlink` correctly determines the runtime modules required, add the fol
 
 ```java
 module my.module {
-  requires io.avaje.logback.encoder;  
+  requires io.avaje.logback.encoder;
 }
 ```
 

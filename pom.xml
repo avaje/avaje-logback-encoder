@@ -11,7 +11,7 @@
 
   <groupId>io.avaje</groupId>
   <artifactId>avaje-logback-encoder</artifactId>
-  <version>0.8-RC1</version>
+  <version>0.8</version>
 
   <properties>
     <surefire.useModulePath>false</surefire.useModulePath>

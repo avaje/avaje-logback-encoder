@@ -5,7 +5,7 @@
 
 # Backported to Java 8 and Logback 1.1
 
-This version of avaje-logback-encoder is backported to Java 8 and also to the 
+This version of avaje-logback-encoder is backported to Java 8 and also to the
 Logback version 1.1 Encoder API and tested against logback-classic version 1.1.11.
 
 It lives on the git `java8-backport` branch.

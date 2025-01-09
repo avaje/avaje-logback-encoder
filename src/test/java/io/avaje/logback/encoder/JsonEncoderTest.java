@@ -99,6 +99,16 @@ class JsonEncoderTest {
         assertThat((String)asMap.get("stacktrace")).startsWith("j.l.NullPointerException: ");
     }
 
+    @Test
+    void awsAppender() {
+      AwsLambdaAppender appender = new AwsLambdaAppender();
+      appender.start();
+
+      appender.append(createLogEvent());
+      appender.append(createLogEvent(createThrowable()));
+      appender.append(createLogEvent());
+    }
+
     Throwable createThrowable() {
         try {
             System.getProperty("doNotExist").toUpperCase();

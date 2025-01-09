@@ -30,6 +30,7 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
   private int fieldExtra;
   private String component;
   private String environment;
+  private boolean immediateFlush = true;
 
   public JsonEncoder() {
     this.json = JsonStream.builder().build();
@@ -64,6 +65,9 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
   public void doEncode(ILoggingEvent event) throws IOException {
     byte[] messageBytes = encode(event);
     outputStream.write(messageBytes);
+    if (immediateFlush) {
+      outputStream.flush();
+    }
   }
 
   byte[] encode(ILoggingEvent event) {
@@ -112,6 +116,10 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
       writer.writeNewLine();
     }
     return outputStream.toByteArray();
+  }
+
+  public void setImmediateFlush(boolean immediateFlush) {
+    this.immediateFlush = immediateFlush;
   }
 
   public void setComponent(String component) {

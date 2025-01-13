@@ -7,13 +7,13 @@ import ch.qos.logback.core.encoder.Encoder;
 import java.io.IOException;
 
 /**
- * Appender to be used for AWS Lambda that defaults to using JsonEncoder.
+ * Appender that writes to STDOUT that defaults to using JsonEncoder.
  */
-public final class AwsLambdaAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
+public final class StdOutAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
   private JsonEncoder encoder;
 
-  public AwsLambdaAppender() {
+  public StdOutAppender() {
     this.encoder = new JsonEncoder();
   }
 
@@ -39,4 +39,19 @@ public final class AwsLambdaAppender extends UnsynchronizedAppenderBase<ILogging
   public void setEncoder(JsonEncoder encoder) {
     this.encoder = encoder;
   }
+
+  /**
+   * Set the component on an underlying JsonEncoder otherwise throw IllegalStateException.
+   */
+  public void setComponent(String component) {
+    encoder.setComponent(component);
+  }
+
+  /**
+   * Set the environment on an underlying JsonEncoder otherwise throw IllegalStateException.
+   */
+  public void setEnvironment(String environment) {
+    encoder.setEnvironment(environment);
+  }
+
 }

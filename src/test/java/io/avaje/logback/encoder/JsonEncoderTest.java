@@ -101,7 +101,9 @@ class JsonEncoderTest {
 
     @Test
     void awsAppender() {
-      AwsLambdaAppender appender = new AwsLambdaAppender();
+      StdOutAppender appender = new StdOutAppender();
+      appender.setComponent("my-other");
+      appender.setEnvironment("localdev");
       appender.start();
 
       appender.append(createLogEvent());

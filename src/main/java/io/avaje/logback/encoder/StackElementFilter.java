@@ -102,8 +102,14 @@ public interface StackElementFilter {
     Builder byPattern(List<Pattern> excludes);
 
     /**
+     * Include all the standard filters generated, reflective invocation, jdk internals and spring.
+     */
+    Builder allFilters();
+
+    /**
      * Build and return the StackElementFilter with the given options.
      */
     StackElementFilter build();
+
   }
 }

@@ -41,6 +41,15 @@ final class FilterBuilder implements StackElementFilter.Builder {
   }
 
   @Override
+  public StackElementFilter.Builder allFilters() {
+    generated();
+    reflectiveInvocation();
+    jdkInternals();
+    spring();
+    return this;
+  }
+
+  @Override
   public StackElementFilter build() {
     if (filters.isEmpty()) {
       return StackElementFilter.any();

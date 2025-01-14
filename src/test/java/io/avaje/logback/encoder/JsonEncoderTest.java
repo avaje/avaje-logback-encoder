@@ -90,6 +90,7 @@ class JsonEncoderTest {
 
         JsonEncoder encoder = new JsonEncoder();
         encoder.setThrowableConverter(converter);
+        encoder.setIncludeStackHash(false);
         encoder.start();
 
         byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
@@ -97,6 +98,29 @@ class JsonEncoderTest {
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
         assertThat((String)asMap.get("stacktrace")).startsWith("j.l.NullPointerException: ");
+        assertThat(asMap).doesNotContainKey("stackhash");
+    }
+
+    @Test
+    void throwable_usingConverter_includeStackHash() {
+        final TrimPackageAbbreviator trimPackages = new TrimPackageAbbreviator();
+        trimPackages.setTargetLength(10);
+
+        final ShortenedThrowableConverter converter = new ShortenedThrowableConverter();
+        converter.setMaxDepthPerThrowable(3);
+        converter.setClassNameAbbreviator(trimPackages);
+
+        JsonEncoder encoder = new JsonEncoder();
+        encoder.setThrowableConverter(converter);
+        encoder.setIncludeStackHash(true);
+        encoder.start();
+
+        byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
+        SimpleMapper simpleMapper = SimpleMapper.builder().build();
+        Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
+
+        assertThat((String)asMap.get("stacktrace")).startsWith("j.l.NullPointerException: ");
+        assertThat((String)asMap.get("stackhash")).isEqualTo("2a4a23a6");
     }
 
     @Test

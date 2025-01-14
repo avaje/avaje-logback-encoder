@@ -37,7 +37,7 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
   public JsonEncoder() {
     this.json = JsonStream.builder().build();
     this.properties = json.properties("component", "env", "timestamp", "level", "logger", "message", "thread", "stackhash", "stacktrace");
-    this.component = System.getenv("COMPONENT");
+    this.component = Eval.defaultComponent();
     this.environment = System.getenv("ENVIRONMENT");
     this.stackHasher = new StackHasher(StackElementFilter.builder().allFilters().build());
   }
@@ -131,11 +131,11 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
   }
 
   public void setComponent(String component) {
-    this.component = component;
+    this.component = Eval.eval(component);
   }
 
   public void setEnvironment(String environment) {
-    this.environment = environment;
+    this.environment = Eval.eval(environment);
   }
 
   public void setThrowableConverter(ThrowableHandlingConverter throwableConverter) {
@@ -147,7 +147,12 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
       return;
     }
     var mapper = SimpleMapper.builder().jsonStream(json).build();
-    mapper.map().fromJson(customFields).forEach((k, v) -> customFieldsMap.put(k, mapper.toJson(v)));
+    mapper.map().fromJson(customFields).forEach((key, value) -> {
+      if (value instanceof String) {
+        value = Eval.eval((String) value);
+      }
+      customFieldsMap.put(key, mapper.toJson(value));
+    });
   }
 
   public void setTimestampPattern(String pattern) {

@@ -68,16 +68,32 @@ class JsonEncoderTest {
     }
 
     @Test
-    void throwable_usingDefault() {
+    void customFieldsEval() {
+        System.setProperty("some.custom.property", "Hi!");
         JsonEncoder encoder = new JsonEncoder();
+        encoder.setCustomFields("{\"my-custom\":\"${some.custom.property}\", \"other\": \"myLiteral\", \"more\": 12}");
         encoder.start();
 
         byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
         SimpleMapper simpleMapper = SimpleMapper.builder().build();
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
-        assertThat((String)asMap.get("stacktrace")).startsWith("java.lang.NullPointerException: ");
+        assertThat((String)asMap.get("my-custom")).isEqualTo("Hi!");
+        assertThat((String)asMap.get("other")).isEqualTo("myLiteral");
+        assertThat((Long)asMap.get("more")).isEqualTo(12L);
     }
+
+  @Test
+  void throwable_usingDefault() {
+    JsonEncoder encoder = new JsonEncoder();
+    encoder.start();
+
+    byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
+    SimpleMapper simpleMapper = SimpleMapper.builder().build();
+    Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
+
+    assertThat((String)asMap.get("stacktrace")).startsWith("java.lang.NullPointerException: ");
+  }
 
     @Test
     void throwable_usingConverter() {
@@ -120,7 +136,7 @@ class JsonEncoderTest {
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
         assertThat((String)asMap.get("stacktrace")).startsWith("j.l.NullPointerException: ");
-        assertThat((String)asMap.get("stackhash")).isEqualTo("2a4a23a6");
+        assertThat((String)asMap.get("stackhash")).isEqualTo("cd6925a6");
     }
 
     @Test

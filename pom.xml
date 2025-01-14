@@ -11,11 +11,11 @@
 
   <groupId>io.avaje</groupId>
   <artifactId>avaje-logback-encoder</artifactId>
-  <version>0.9</version>
+  <version>0.10</version>
 
   <properties>
     <surefire.useModulePath>false</surefire.useModulePath>
-    <project.build.outputTimestamp>2025-01-09T05:29:55Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-01-14T04:52:23Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>

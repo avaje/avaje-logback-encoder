@@ -10,6 +10,8 @@ import java.util.TimeZone;
 
 import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.encoder.EncoderBase;
 import io.avaje.json.JsonWriter;
 import io.avaje.json.PropertyNames;
@@ -21,6 +23,7 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
   private final JsonStream json;
   private final Map<String, String> customFieldsMap = new HashMap<>();
   private final PropertyNames properties;
+  private final StackHasher stackHasher;
   private ThrowableHandlingConverter throwableConverter = new ShortenedThrowableConverter();
 
   private DateTimeFormatter formatter;
@@ -31,12 +34,14 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
   private String component;
   private String environment;
   private boolean immediateFlush = true;
+  private boolean includeStackHash = true;
 
   public JsonEncoder() {
     this.json = JsonStream.builder().build();
-    this.properties = json.properties("component", "env", "timestamp", "level", "logger", "message", "thread", "stacktrace");
-    this.component = System.getenv("COMPONENT");
+    this.properties = json.properties("component", "env", "timestamp", "level", "logger", "message", "thread", "stackhash", "stacktrace");
+    this.component = Eval.defaultComponent();
     this.environment = System.getenv("ENVIRONMENT");
+    this.stackHasher = new StackHasher(StackElementFilter.builder().allFilters().build());
   }
 
   @Override
@@ -101,7 +106,15 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
       writer.name(6);
       writer.value(threadName);
       if (!stackTraceBody.isEmpty()) {
-        writer.name(7);
+        if (includeStackHash) {
+          IThrowableProxy throwableProxy = event.getThrowableProxy();
+          if (throwableProxy instanceof ThrowableProxy) {
+            String hash = stackHasher.hexHash(((ThrowableProxy) throwableProxy).getThrowable());
+            writer.name(7);
+            writer.value(hash);
+          }
+        }
+        writer.name(8);
         writer.value(stackTraceBody);
       }
       customFieldsMap.forEach((k, v) -> {
@@ -118,16 +131,20 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
     return outputStream.toByteArray();
   }
 
+  public void setIncludeStackHash(boolean includeStackHash) {
+    this.includeStackHash = includeStackHash;
+  }
+
   public void setImmediateFlush(boolean immediateFlush) {
     this.immediateFlush = immediateFlush;
   }
 
   public void setComponent(String component) {
-    this.component = component;
+    this.component = Eval.eval(component);
   }
 
   public void setEnvironment(String environment) {
-    this.environment = environment;
+    this.environment = Eval.eval(environment);
   }
 
   public void setThrowableConverter(ThrowableHandlingConverter throwableConverter) {
@@ -139,7 +156,12 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
       return;
     }
     SimpleMapper mapper = SimpleMapper.builder().jsonStream(json).build();
-    mapper.map().fromJson(customFields).forEach((k, v) -> customFieldsMap.put(k, mapper.toJson(v)));
+    mapper.map().fromJson(customFields).forEach((key, value) -> {
+      if (value instanceof String) {
+        value = Eval.eval((String) value);
+      }
+      customFieldsMap.put(key, mapper.toJson(value));
+    });
   }
 
   public void setTimestampPattern(String pattern) {

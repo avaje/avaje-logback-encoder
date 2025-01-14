@@ -22,28 +22,31 @@ import java.util.regex.Pattern;
  * Component in charge of accepting or rejecting {@link StackTraceElement elements} when computing a
  * stack trace hash
  */
-public abstract class StackElementFilter {
+public interface StackElementFilter {
+
   /**
-   * Tests whether or not the specified {@link StackTraceElement} should be accepted when computing
+   * Return a Builder for common stack element filters.
+   */
+  static Builder builder() {
+    return new FilterBuilder();
+  }
+
+  /**
+   * Tests whether the specified {@link StackTraceElement} should be accepted when computing
    * a stack hash.
    *
    * @param element The {@link StackTraceElement} to be tested
    * @return {@code true} if and only if {@code element} should be accepted
    */
-  public abstract boolean accept(StackTraceElement element);
+  boolean accept(StackTraceElement element);
 
   /**
    * Creates a {@link StackElementFilter} that accepts any stack trace elements
    *
    * @return the filter
    */
-  public static StackElementFilter any() {
-    return new StackElementFilter() {
-      @Override
-      public boolean accept(StackTraceElement element) {
-        return true;
-      }
-    };
+  static StackElementFilter any() {
+    return element -> true;
   }
 
   /**
@@ -53,13 +56,8 @@ public abstract class StackElementFilter {
    *
    * @return the filter
    */
-  public static StackElementFilter withSourceInfo() {
-    return new StackElementFilter() {
-      @Override
-      public boolean accept(StackTraceElement element) {
-        return element.getFileName() != null && element.getLineNumber() >= 0;
-      }
-    };
+  static StackElementFilter withSourceInfo() {
+    return element -> element.getFileName() != null && element.getLineNumber() >= 0;
   }
 
   /**
@@ -68,20 +66,50 @@ public abstract class StackElementFilter {
    * @param excludes regular expressions matching {@link StackTraceElement} to filter out
    * @return the filter
    */
-  public static StackElementFilter byPattern(final List<Pattern> excludes) {
-    return new StackElementFilter() {
-      @Override
-      public boolean accept(StackTraceElement element) {
-        if (!excludes.isEmpty()) {
-          final String classNameAndMethod = element.getClassName() + "." + element.getMethodName();
-          for (final Pattern exclusionPattern : excludes) {
-            if (exclusionPattern.matcher(classNameAndMethod).find()) {
-              return false;
-            }
-          }
-        }
-        return true;
-      }
-    };
+  static StackElementFilter byPattern(final List<Pattern> excludes) {
+    return builder().byPattern(excludes).build();
+  }
+
+  /**
+   * Builder for common StackElementFilters.
+   */
+  interface Builder {
+
+    /**
+     * Include generated classes in the filter containing
+     * {@code $$FastClassByCGLIB$$} and {@code $$EnhancerBySpringCGLIB$$}
+     */
+    Builder generated();
+
+    /**
+     * Include reflective invocation in the filter.
+     */
+    Builder reflectiveInvocation();
+
+    /**
+     * Include jdk internal classes in the filter.
+     */
+    Builder jdkInternals();
+
+    /**
+     * Include Spring Framework dynamic invocation and plumbing in the filter.
+     */
+    Builder spring();
+
+    /**
+     * Include the regex patterns in the filter.
+     */
+    Builder byPattern(List<Pattern> excludes);
+
+    /**
+     * Include all the standard filters generated, reflective invocation, jdk internals and spring.
+     */
+    Builder allFilters();
+
+    /**
+     * Build and return the StackElementFilter with the given options.
+     */
+    StackElementFilter build();
+
   }
 }

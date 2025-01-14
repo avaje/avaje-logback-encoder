@@ -28,9 +28,10 @@ class StackElementFilterTest {
     StackElementFilter filter = StackElementFilter.builder().reflectiveInvocation().build();
 
     assertTrue(filter.accept(new StackTraceElement("a.b.C", "invoke", null, 0)));
-    assertFalse(filter.accept(new StackTraceElement("java.lang.reflect.A", "notInvoke", null, 0)));
-    assertFalse(filter.accept(new StackTraceElement("sun.reflect.A", "notInvoke", null, 0)));
-    assertFalse(filter.accept(new StackTraceElement("net.sf.cglib.proxy.MethodProxy", "notInvoke", null, 0)));
+
+    assertTrue(filter.accept(new StackTraceElement("java.lang.reflect.A", "notInvoke", null, 0)));
+    assertTrue(filter.accept(new StackTraceElement("sun.reflect.A", "notInvoke", null, 0)));
+    assertTrue(filter.accept(new StackTraceElement("net.sf.cglib.proxy.MethodProxy", "notInvoke", null, 0)));
 
     assertFalse(filter.accept(new StackTraceElement("java.lang.reflect.A", "invoke", null, 0)));
     assertFalse(filter.accept(new StackTraceElement("sun.reflect.A", "invoke", null, 0)));

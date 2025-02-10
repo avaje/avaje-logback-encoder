@@ -2,7 +2,7 @@ package io.avaje.logback.encoder;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
-import io.avaje.json.simple.SimpleMapper;
+import io.avaje.json.mapper.JsonMapper;
 import io.avaje.logback.encoder.abbreviator.TrimPackageAbbreviator;
 import org.junit.jupiter.api.Test;
 import ch.qos.logback.classic.Logger;
@@ -34,8 +34,8 @@ class JsonEncoderTest {
         encoder.start();
         byte[] bytes = encoder.encode(event);
 
-        SimpleMapper simpleMapper = SimpleMapper.builder().build();
-        Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
+        JsonMapper mapper = JsonMapper.builder().build();
+        Map<String, Object> asMap = mapper.map().fromJson(bytes);
 
         assertThat((String)asMap.get("component")).isNull();
         assertThat((String)asMap.get("env")).isNull();
@@ -55,8 +55,8 @@ class JsonEncoderTest {
 
         byte[] bytes = encoder.encode(createLogEvent());
 
-        SimpleMapper simpleMapper = SimpleMapper.builder().build();
-        Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
+        JsonMapper mapper = JsonMapper.builder().build();
+        Map<String, Object> asMap = mapper.map().fromJson(bytes);
 
         assertThat((String)asMap.get("component")).isEqualTo("my-component");
         assertThat((String)asMap.get("env")).isEqualTo("dev");
@@ -75,7 +75,7 @@ class JsonEncoderTest {
         encoder.start();
 
         byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
-        SimpleMapper simpleMapper = SimpleMapper.builder().build();
+        JsonMapper simpleMapper = JsonMapper.builder().build();
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
         assertThat((String)asMap.get("my-custom")).isEqualTo("Hi!");
@@ -89,7 +89,7 @@ class JsonEncoderTest {
     encoder.start();
 
     byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
-    SimpleMapper simpleMapper = SimpleMapper.builder().build();
+    JsonMapper simpleMapper = JsonMapper.builder().build();
     Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
     assertThat((String)asMap.get("stacktrace")).startsWith("java.lang.NullPointerException: ");
@@ -110,7 +110,7 @@ class JsonEncoderTest {
         encoder.start();
 
         byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
-        SimpleMapper simpleMapper = SimpleMapper.builder().build();
+        JsonMapper simpleMapper = JsonMapper.builder().build();
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
         assertThat((String)asMap.get("stacktrace")).startsWith("j.l.NullPointerException: ");
@@ -132,7 +132,7 @@ class JsonEncoderTest {
         encoder.start();
 
         byte[] bytes = encoder.encode(createLogEvent(createThrowable()));
-        SimpleMapper simpleMapper = SimpleMapper.builder().build();
+        JsonMapper simpleMapper = JsonMapper.builder().build();
         Map<String, Object> asMap = simpleMapper.map().fromJson(bytes);
 
         assertThat((String)asMap.get("stacktrace")).startsWith("j.l.NullPointerException: ");

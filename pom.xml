@@ -11,7 +11,7 @@
 
   <groupId>io.avaje</groupId>
   <artifactId>avaje-logback-encoder</artifactId>
-  <version>0.10</version>
+  <version>0.11</version>
 
   <properties>
     <surefire.useModulePath>false</surefire.useModulePath>
@@ -27,7 +27,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-json-core</artifactId>
-      <version>3.0-RC6</version>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>

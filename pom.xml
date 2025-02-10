@@ -11,7 +11,7 @@
 
   <groupId>io.avaje</groupId>
   <artifactId>avaje-logback-encoder</artifactId>
-  <version>0.10-java8</version>
+  <version>0.11-java8</version>
 
   <properties>
     <surefire.useModulePath>false</surefire.useModulePath>
@@ -28,7 +28,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-json-core</artifactId>
-      <version>3.0-RC6-java8</version>
+      <version>3.0-java8</version>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>

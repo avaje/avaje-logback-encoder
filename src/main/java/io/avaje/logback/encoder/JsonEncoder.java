@@ -15,7 +15,7 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.encoder.EncoderBase;
 import io.avaje.json.JsonWriter;
 import io.avaje.json.PropertyNames;
-import io.avaje.json.simple.SimpleMapper;
+import io.avaje.json.mapper.JsonMapper;
 import io.avaje.json.stream.JsonStream;
 
 public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
@@ -155,7 +155,7 @@ public final class JsonEncoder extends EncoderBase<ILoggingEvent> {
     if (customFields == null || customFields.isEmpty()) {
       return;
     }
-    SimpleMapper mapper = SimpleMapper.builder().jsonStream(json).build();
+    JsonMapper mapper = JsonMapper.builder().jsonStream(json).build();
     mapper.map().fromJson(customFields).forEach((key, value) -> {
       if (value instanceof String) {
         value = Eval.eval((String) value);

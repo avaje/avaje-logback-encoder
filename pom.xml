@@ -11,7 +11,9 @@
 
   <groupId>io.avaje</groupId>
   <artifactId>avaje-logback-encoder</artifactId>
-  <version>0.11-java8</version>
+  <name>avaje-logback-encoder</name>
+  <description>logback encoder for structured json logging format</description>
+  <version>1.0-java8</version>
 
   <properties>
     <surefire.useModulePath>false</surefire.useModulePath>
@@ -28,7 +30,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-json-core</artifactId>
-      <version>3.0-java8</version>
+      <version>3.6-java8</version>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
